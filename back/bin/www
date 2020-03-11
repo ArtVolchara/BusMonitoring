@@ -1,13 +1,13 @@
-#!/usr/bin/env node
+
 
 /**
  * Module dependencies.
  */
-
-const io = require('socket.io')(http);
-const app = require('../app');
-const debug = require('debug')('BusMonitoring');
 const http = require('http');
+
+const debug = require('debug')('BusMonitoring');
+const app = require('../app');
+const busesDataGenerator = require('../busesDataGenerator');
 
 /**
  * Get port from environment and store in Express.
@@ -19,9 +19,9 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
 const server = http.createServer(app);
 
+busesDataGenerator();
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -85,3 +85,5 @@ function onListening() {
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+module.exports = { server };

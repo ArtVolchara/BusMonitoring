@@ -1,21 +1,18 @@
 import React from 'react';
 // import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Home from '../Home/homepage'
-
+import Homepage from '../Home/homepage'
 import './App.css';
 
 export default class App extends React.Component {
 
   render() {
+    console.log("app render");
     return (
       <Router>
-        <MyNavbar/>
-        <div className={"App"}>
           <Switch>
-            <Route exact path='/' Component={Home} />
+            <Route path='/' component={Homepage} />
           </Switch>
-        </div>
       </Router>
     );
   }
