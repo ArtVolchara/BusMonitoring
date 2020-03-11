@@ -16,7 +16,7 @@ class Home extends React.Component {
     busesSocket.on('buses', (buses) => this.setState({ buses: buses }));
   }
   componentWillUnmount() {
-    busesSocket.off('buses')
+    busesSocket.disconnect()
   }
   render() {
     console.log("homepage rendered");

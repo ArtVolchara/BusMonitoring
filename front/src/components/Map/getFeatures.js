@@ -7,6 +7,7 @@ export default function getFeatures(buses) {
     },
     properties: {
       reg_number: el.reg_number,
+      object_id: el.object_id,
       route: el.route,
       fuel: +el.state.fuel,
       speed: +el.state.speed,

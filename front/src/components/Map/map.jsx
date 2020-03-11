@@ -1,12 +1,14 @@
 import React from 'react';
+import openSocket from 'socket.io-client'
 import MapGL, { Source, Layer } from 'react-map-gl';
 import './tooltip.css'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { dataLayer } from './dataLayer';
 import getFeatures from './getFeatures'
 import updatePercentiles from './updatePercentiles';
-// import BusMarker from './Marker/marker'
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYXJ0dm9sY2hhcmEiLCJhIjoiY2s3bHJ2NjU4MGFjbDNtczJnam10aDU1aSJ9.oH_RWYjKfrKGC77mYIQ8oA';
+
+
 
 export default class Map extends React.PureComponent {
     constructor(props) {
@@ -16,21 +18,32 @@ export default class Map extends React.PureComponent {
                 longitude: 37.4067,
                 latitude: 55.7187,
                 zoom: 15,
-                data: null,
-                hoveredFeature: null,
-            }
+            },
+            data: null,
+            hoveredFeature: null,
+            clickedBusId: '',
+            telemetry: null,
         };
+        
     }
     componentDidMount() {
         const features = getFeatures(this.props.buses)
         this.setState({ data: updatePercentiles(features) })
+        this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.state.clickedBusId}` });
+        this.busTelemetrySocket.on("busTelemetry", (busTelemetry) => this.setState({ telemetry: busTelemetry }));
+    }
+    componentDidUpdate(prevState) {
+        if (prevState.clickedBusId !== this.state.clickedBusId) {
+            this.busTelemetrySocket.disconnect()
+            this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.state.clickedBusId}` });
+        }
+        this.busTelemetrySocket.on("busTelemetry", (busTelemetry) => this.setState({ telemetry: busTelemetry }));
     }
     componentWillReceiveProps(nextProps) {
         const features = getFeatures(nextProps.buses)
         this.setState({ data: updatePercentiles(features) })
     }
     _onViewportChange = (viewport) => this.setState({ viewport });
-
 
     _onHover = event => {
         const {
@@ -39,7 +52,17 @@ export default class Map extends React.PureComponent {
         } = event;
         const hoveredFeature = features && features.find(f => f.layer.id === 'data');
         this.setState({ hoveredFeature, x: offsetX, y: offsetY });
-        console.log(hoveredFeature);
+    };
+    _onClick = event => {
+        const {
+            features,
+        } = event;
+        const clickedPoint = features && features.find(f => f.layer.id === 'data');
+        if (clickedPoint) {
+            console.log(clickedPoint.properties.object_id);
+            this.setState({ clickedBusId: clickedPoint.properties.object_id });
+        }
+
     };
     _renderTooltip() {
         const { hoveredFeature, x, y } = this.state;
@@ -83,6 +106,7 @@ export default class Map extends React.PureComponent {
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                     onViewportChange={this._onViewportChange}
                     onHover={this._onHover}
+                    onClick={this._onClick}
                 >
                     <Source type="geojson" data={this.state.data}>
                         <Layer {...dataLayer} />

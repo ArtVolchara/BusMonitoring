@@ -18,7 +18,7 @@ const buses = [{
   },
 },
 {
-  object_id: 'cb2f2a34-2702-4352-b04f-6242794fbf51',
+  object_id: 'cb2f2a34-2702-4352-b04f-6242794fbf52',
   reg_number: 'A777AA777',
   route: '157к',
   state: {
@@ -41,8 +41,8 @@ function busesDataGenerator() {
     const io = require('socket.io')();
     const port = 8000;
     // socket connection //
-    io.of('/buses').on('connection', async (socket) => {
-      console.log('connetion of /buses established');
+    io.of('/buses').on('connection', (socket) => {
+      console.log('connection of /buses established');
       setInterval((buses) => {
         changeBusesAttributes(buses);
         busesTelemetryGenerator(buses, busesTelemetry);
@@ -50,12 +50,14 @@ function busesDataGenerator() {
         socket.emit('buses', buses);
       }, 5000, buses);
     });
-    io.of('/buses/:object_id/telemetry').on('connection', (socket) => {
-      console.log('connetion of /buses/:object_id/telemetry established');
-      console.log(busesTelemetry);
-      console.log(socket.handshake.query.object_id);
-      console.log(busesTelemetry[socket.handshake.query.object_id]);
-      socket.emit('telemetry', busesTelemetry[socket.handshake.query.object_id]);
+    io.of('/buses/telemetry').on('connection', (socket) => {
+      console.log('connection of /buses/telemetry established');
+      // console.log(busesTelemetry);
+      if (socket.handshake.query['object_id']) {
+        let object_id = socket.handshake.query['object_id'];
+        let busTelemetry = busesTelemetry[object_id];
+        socket.emit('busTelemetry', busTelemetry);
+      }
       socket.on('disconnect', () => {
         console.log('connection  of /buses/:object_id/telemetry destroyed');
       });
