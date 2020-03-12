@@ -12,7 +12,7 @@ class Home extends React.Component {
     };
   }
   componentDidMount() {
-    console.log("mount");
+    console.log("homepage mounted");
     busesSocket.on('buses', (buses) => this.setState({ buses: buses }));
   }
   componentWillUnmount() {

@@ -52,7 +52,6 @@ function busesDataGenerator() {
     });
     io.of('/buses/telemetry').on('connection', (socket) => {
       console.log('connection of /buses/telemetry established');
-      // console.log(busesTelemetry);
       if (socket.handshake.query['object_id']) {
         let object_id = socket.handshake.query['object_id'];
         let busTelemetry = busesTelemetry[object_id];
