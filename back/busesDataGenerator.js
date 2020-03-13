@@ -43,29 +43,34 @@ function busesDataGenerator() {
     // socket connection //
     io.of('/buses').on('connection', (socket) => {
       console.log('connection of /buses established');
-      setInterval((buses) => {
+      setInterval((buses, busesTelemetry) => {
         changeBusesAttributes(buses);
         busesTelemetryGenerator(buses, busesTelemetry);
-        // console.log(busesTelemetry['cb2f2a34-2702-4352-b04f-6242794fbf51']);
         socket.emit('buses', buses);
-      }, 5000, buses);
+      }, 5000, buses, busesTelemetry);
     });
     io.of('/buses/telemetry').on('connection', (socket) => {
       console.log('connection of /buses/telemetry established');
-      if (socket.handshake.query['object_id']) {
-        let object_id = socket.handshake.query['object_id'];
-        let busTelemetry = busesTelemetry[object_id];
-        socket.emit('busTelemetry', busTelemetry);
+      if (socket.handshake.query.object_id) {
+        const { object_id } = socket.handshake.query;
+        setInterval((busesTelemetry) => {
+          const busTelemetry = busesTelemetry[object_id];
+          if (busTelemetry) {
+            socket.emit('busTelemetry', busTelemetry);
+          }
+        }, 1000, busesTelemetry);
       }
       socket.on('disconnect', () => {
         console.log('connection  of /buses/:object_id/telemetry destroyed');
       });
     });
+
+
     io.listen(port);
     console.log('busesDataGenerator listening on port ', port);
   } catch (error) {
     console.log('error in busesDataGenerator function:', error.message);
-
   }
-};
-module.exports = busesDataGenerator
+}
+
+module.exports = busesDataGenerator;

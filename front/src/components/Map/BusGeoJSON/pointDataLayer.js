@@ -1,4 +1,4 @@
-export const dataLayer = {
+export const pointDataLayer = {
   id: 'data',
   type: 'circle',
   paint: {

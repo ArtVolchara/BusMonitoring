@@ -1,4 +1,4 @@
-export default function getFeatures(buses) {
+export default function getPointFeatures(buses) {
   const features = buses.map((el) => ({
     type: 'Feature',
     geometry: {

@@ -1,5 +1,5 @@
 
-export default function updatePercentiles(featureCollection) {
+export default function updatePointPercentiles(featureCollection) {
   return {
     type: 'FeatureCollection',
     features: featureCollection.map((feature) => {

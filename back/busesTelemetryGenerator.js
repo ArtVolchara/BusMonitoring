@@ -1,9 +1,11 @@
-function busesTelemetryGenerator(buses, busesTelemetries) {
+function busesTelemetryGenerator(buses, busesTelemetry) {
+  // console.log(busesTelemetry[0].position.coordinates, busesTelemetry[1].position.coordinates);
   for (bus of buses) {
-    if (!busesTelemetries.hasOwnProperty(bus.object_id)) {
-      busesTelemetries[bus.object_id] = [];
+    // console.log(bus.state.position.coordinates);
+    if (!busesTelemetry.hasOwnProperty(bus.object_id)) {
+      busesTelemetry[bus.object_id] = [];
     }
-    busesTelemetries[bus.object_id].unshift(
+    busesTelemetry[bus.object_id].unshift(
       {
         object_id: bus.object_id,
         time: Date(),
@@ -16,10 +18,10 @@ function busesTelemetryGenerator(buses, busesTelemetries) {
         direction: bus.state.direction,
       },
     );
-    if (busesTelemetries[bus.object_id].length > 10) {
-      busesTelemetries[bus.object_id].length = 10;
+    if (busesTelemetry[bus.object_id].length > 10) {
+      busesTelemetry[bus.object_id].length = 10;
     }
   }
-  return busesTelemetries;
+  return busesTelemetry;
 }
 module.exports = busesTelemetryGenerator;
