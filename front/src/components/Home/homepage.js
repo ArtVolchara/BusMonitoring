@@ -23,7 +23,7 @@ class Home extends React.Component {
     return (
       <>{this.state.buses ?
         <>
-          <Map buses={this.state.buses} />
+          <Map buses={this.state.buses} busesSocket={busesSocket}/>
           <div className="bus-table">
             {this.state.buses && this.state.buses.map((bus, i) =>
               <Bus bus={bus} key={i} />

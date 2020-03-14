@@ -1,5 +1,5 @@
 export const pointDataLayer = {
-  id: 'data',
+  id: 'Point-data',
   type: 'circle',
   paint: {
     'circle-color': {
@@ -17,5 +17,6 @@ export const pointDataLayer = {
         [100, '#1eff00']
       ],
     },
+    'circle-radius': 7,
   },
 };

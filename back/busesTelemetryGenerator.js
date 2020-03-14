@@ -1,7 +1,5 @@
 function busesTelemetryGenerator(buses, busesTelemetry) {
-  // console.log(busesTelemetry[0].position.coordinates, busesTelemetry[1].position.coordinates);
   for (bus of buses) {
-    // console.log(bus.state.position.coordinates);
     if (!busesTelemetry.hasOwnProperty(bus.object_id)) {
       busesTelemetry[bus.object_id] = [];
     }

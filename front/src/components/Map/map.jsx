@@ -21,7 +21,7 @@ export default class Map extends React.PureComponent {
             linesData: null,
             hoveredFeature: null,
             clickedBusId: '',
-            telemetry: null,
+            busTelemetry: null,
             viewport: {
                 longitude: 37.4067,
                 latitude: 55.7187,
@@ -31,53 +31,30 @@ export default class Map extends React.PureComponent {
         };
 
     }
-    componentDidMount() {
-        console.log("map mounted")
-        this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.state.clickedBusId}` });
-        this.busTelemetrySocket.on("busTelemetry", (busTelemetry) => this.setState({ telemetry: busTelemetry }));
-    }
-    componentDidUpdate(prevProps, prevState) {
-        console.log("map updated");
-        if (prevState.clickedBusId !== this.state.clickedBusId) {
-            // console.log(prevState.clickedBusId, this.state.clickedBusId);
-            this.busTelemetrySocket.disconnect()
-            this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.state.clickedBusId}` });
-            this.busTelemetrySocket.on("busTelemetry", (busTelemetry) => {
-                const telemetry = busTelemetry
-                const features = getLineFeatures(telemetry)
-                this.setState({ telemetry: telemetry, linesData: updateLinePercentiles(features) })
-            });
-        }
-    }
-    componentWillReceiveProps(nextProps) {
-        const features = getPointFeatures(nextProps.buses)
-        this.setState({ pointsData: updatePointPercentiles(features) })
-    }
+
     _onViewportChange = viewport => this.setState({ viewport });
 
     _onHover = event => {
-        // console.log(event);
         const {
             features,
             srcEvent: { offsetX, offsetY }
         } = event;
-        const hoveredFeature = features && features.find(f => f.layer.id === 'data');
+        const hoveredFeature = features && features.find(f => f.layer.id === 'Point-data');
         this.setState({ hoveredFeature, x: offsetX, y: offsetY });
+    };
+    _getCursor = ({ isHovering, isDragging }) => {
+        return isHovering ? 'pointer' : 'default';
     };
     _onClick = event => {
         const {
             features,
         } = event;
-        const clickedPoint = features && features.find(f => f.layer.id === 'data');
+        const clickedPoint = features && features.find(f => f.layer.id === 'Point-data');
         if (clickedPoint) {
-            // console.log(clickedPoint.properties.object_id);
             this.setState({ clickedBusId: clickedPoint.properties.object_id });
         }
 
     };
-    handleMarkerClick = (event) => {
-
-    }
     _renderTooltip() {
         const { hoveredFeature, x, y } = this.state;
         const tooltipStyle = {
@@ -92,7 +69,6 @@ export default class Map extends React.PureComponent {
             fontsize: "10px",
             zIndex: 9,
             pointerEvents: "none",
-            cursor: "pointer",
         }
         return (
             hoveredFeature && (
@@ -104,6 +80,29 @@ export default class Map extends React.PureComponent {
             )
         );
     }
+    componentDidMount() {
+        console.log("map mounted")
+        this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.state.clickedBusId}` });
+        this.busTelemetrySocket.on("busTelemetry", (busTelemetry) => this.setState({ telemetry: busTelemetry }));
+    }
+    componentDidUpdate(prevProps, prevState) {
+        console.log("map updated");
+        if (prevState.clickedBusId !== this.state.clickedBusId) {
+            this.busTelemetrySocket.disconnect()
+            this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.state.clickedBusId}` });
+            this.busTelemetrySocket.on("busTelemetry",  (busTelemetry) => {
+                const features = getLineFeatures(busTelemetry)
+                this.setState({ busTelemetry: busTelemetry, linesData: updateLinePercentiles(features) })
+            });
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        const features = getPointFeatures(nextProps.buses)
+        this.setState({ pointsData: updatePointPercentiles(features) })
+    }
+    componentWillUnmount() {
+        this.busTelemetrySocket.disconnect()
+      }
 
     render() {
         console.log("map rendered");
@@ -114,7 +113,6 @@ export default class Map extends React.PureComponent {
                 </div>
                 <MapGL
                     {...this.state.viewport}
-                    {...this.state.settings}
                     width="100%"
                     height="100%"
                     mapStyle="mapbox://styles/mapbox/dark-v9"
@@ -122,6 +120,9 @@ export default class Map extends React.PureComponent {
                     mapboxApiAccessToken={MAPBOX_TOKEN}
                     onHover={this._onHover}
                     onClick={this._onClick}
+                    clickRadius={2}
+                    interactiveLayerIds = {['Point-data']}
+                    getCursor={this._getCursor}
                 >
                     <Source type="geojson" data={this.state.pointsData}>
                         <Layer {...pointDataLayer} />
@@ -131,8 +132,8 @@ export default class Map extends React.PureComponent {
                         <Source type="geojson" data={this.state.linesData}>
                             <Layer {...lineDataLayer} />
                         </Source>
-                        :<></>
-                }
+                        : <></>
+                    }
                 </MapGL>
             </div>
         )

@@ -9,5 +9,6 @@ export const lineDataLayer = {
         [40, "#ff0000"],
       ],
     },
+    'line-width': 3,
   },
 };
