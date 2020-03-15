@@ -1,5 +1,5 @@
 # BusMonitoring
- Онлайн мониторинг подвижных объектов на карте (Cтэк: React, Node.js, Express.js, Socket.IO,MapBox.);
+ Онлайн мониторинг подвижных объектов на карте (Cтэк: React, Node.js, Express.js, Socket.IO, MapBox.);
  
  Функциональность:
 - Real-time изменение положения объекто на карте
