@@ -12,34 +12,33 @@ class Home extends React.Component {
     this.state = {
       buses: null,
       clickedBusId: null,
-      hoveredBusFeature: null,
+      hoveredBus: null,
     };
   }
   handleClickedBus = (clickedBusId) => {
     this.setState({ clickedBusId: clickedBusId });
   }
 
-  onHover = event => {
-        const {
-            features,
-            point
-        } = event;
-    if (features.length > 0) {
-      const hoveredBusFeature = features[0];
-      if(hoveredBusFeature) {
-        if (!this.state.hoveredBusFeature) {
-          console.log(hoveredBusFeature);
-          this.setState({ hoveredBusFeature, x: point.x, y: point.y });
+  onHover = (event, hoveredBus) => {
+    if (event) {
+      if (event.features.length > 0) {
+        hoveredBus = {
+          id: event.features[0].properties.object_id,
+          reg_number: event.features[0].properties.reg_number,
+          route: event.features[0].properties.route,
+          longitude: event.lngLat.lng,
+          latitude: event.lngLat.lat,
         }
       }
     }
-  };
+    this.setState({ hoveredBus })
+};
 
   onHoverLeave = () => {
-    if (this.state.hoveredBusFeature) {
-        this.setState({ hoveredBusFeature: null });
+    if (this.state.hoveredBus) {
+      this.setState({ hoveredBus: null });
     }
-};
+  };
 
   componentDidMount() {
     console.log("homepage mounted");
@@ -55,14 +54,12 @@ class Home extends React.Component {
         {this.state.buses ?
           <>
             <Map buses={this.state.buses} busesSocket={busesSocket}
-             handleClickedBus={this.handleClickedBus}
-             clickedBusId={this.state.clickedBusId}
-             x={this.state.x}
-             y={this.state.y}
-             hoveredBusFeature={this.state.hoveredBusFeature} 
-             onHover={this.onHover}
-             onHoverLeave={this.onHoverLeave} 
-             />
+              handleClickedBus={this.handleClickedBus}
+              clickedBusId={this.state.clickedBusId}
+              hoveredBus = {this.state.hoveredBus}
+              onHover={this.onHover}
+              onHoverLeave={this.onHoverLeave}
+            />
             <div className='table-container'>
               <table className='bus-table'>
                 <thead>
@@ -74,9 +71,11 @@ class Home extends React.Component {
                 </thead>
                 <tbody>
                   {this.state.buses && this.state.buses.map((bus, i) =>
-                    <Bus bus={bus} key={i} handleClickedBus={this.handleClickedBus} 
-                    clickedBusId={this.state.clickedBusId} 
-                    hoveredBusFeature={this.state.hoveredBusFeature}/>
+                    <Bus bus={bus} key={i} handleClickedBus={this.handleClickedBus}
+                      clickedBusId={this.state.clickedBusId}
+                      onHover={this.onHover}
+                      onHoverLeave={this.onHoverLeave}
+                      hoveredBus={this.state.hoveredBus} />
                   )}
                 </tbody>
               </table>

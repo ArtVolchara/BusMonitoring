@@ -1,7 +1,6 @@
 import React from 'react';
 import openSocket from 'socket.io-client'
-import MapGL, { Source, Layer, FeatureState } from '@urbica/react-map-gl';
-import './BusGeoJSON/tooltip.css'
+import MapGL, { Source, Layer, FeatureState, Popup } from '@urbica/react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './map.css'
 import { pointDataLayer } from './BusGeoJSON/pointDataLayer';
@@ -35,42 +34,29 @@ export default class Map extends React.PureComponent {
         const {
             features,
         } = event;
-        const clickedPoint = features && features.find(f => f.layer.id === 'Point-data'); 
+        const clickedPoint = features && features.find(f => f.layer.id === 'Point-data');
         if (clickedPoint) {
             let clickedBusId = clickedPoint.properties.object_id;
             this.props.handleClickedBus(clickedBusId);
         }
     };
     renderTooltip() {
-        const { hoveredBusFeature, x, y } = this.props;
-        const tooltipStyle = {
-            position: "absolute",
-            left: x,
-            top: y,
-            margin: "8px",
-            padding: "4px",
-            background: '#081217',
-            color: '#d3d6d9',
-            opacity: 0.9,
-            maxWidth: "300px",
-            borderRadius: '5px',
-            fontWeight: 'bold',
-            fontFamily: 'DIN Pro Medium',
-            zIndex: 1,
-            pointerEvents: "none",
-        }
+        const { hoveredBus } = this.props;
         return (
-            hoveredBusFeature && (
-                <div style={tooltipStyle}>
+            hoveredBus && (
+                <Popup longitude={hoveredBus.longitude}
+                    latitude={hoveredBus.latitude}
+                    closeButton={false} closeOnClick={false}
+                    className={'busPopup'}>
                     <div>Type: Bus</div>
-                    <div>Registration number: {hoveredBusFeature.properties.reg_number}</div>
-                    <div>Route: {hoveredBusFeature.properties.route}</div>
-                </div>
+                    <div>Registration number: {hoveredBus.reg_number}</div>
+                    <div>Route: {hoveredBus.route}</div>
+                </Popup>
             )
         );
     }
     componentDidMount() {
-        console.log("map mounted")
+        // console.log("map mounted")
         this.busTelemetrySocket = openSocket(`http://localhost:8000/buses/telemetry`, { query: `object_id=${this.props.clickedBusId}` });
         this.busTelemetrySocket.on("busTelemetry", (busTelemetry) => this.setState({ telemetry: busTelemetry }));
     }
@@ -94,7 +80,7 @@ export default class Map extends React.PureComponent {
     }
 
     render() {
-        // console.log("map rendered");
+        console.log("map rendered");
         return (
             <div className="mapContainer">
                 <div className='sidebarStyle'>
@@ -106,16 +92,10 @@ export default class Map extends React.PureComponent {
                     mapStyle="mapbox://styles/artvolchara/ck7ujql690k1a1ipaa5h7hr3o"
                     onViewportChange={this.onViewportChange}
                     accessToken={MAPBOX_TOKEN}
-                    cursorStyle={this.props.hoveredBusFeature ?
+                    cursorStyle={this.props.hoveredBus ?
                         'pointer'
                         : null}
                 >
-                    <Source id='Point-data' type="geojson" data={this.state.pointsData} promoteId="object_id" />
-                    <Layer {...pointDataLayer}
-                        onHover={this.props.onHover}
-                        onLeave={this.props.onHoverLeave}
-                        onClick={this.onClick} />
-                    {this.renderTooltip()}
                     {this.props.clickedBusId ?
                         <>
                             <Source id='Line-data' type="geojson" data={this.state.linesData} />
@@ -123,9 +103,15 @@ export default class Map extends React.PureComponent {
                         </>
                         : <></>
                     }
-                    {this.props.hoveredBusFeature && (
+                    <Source id='Point-data' type="geojson" data={this.state.pointsData} promoteId="object_id" />
+                    <Layer {...pointDataLayer}
+                        onHover={this.props.onHover}
+                        onLeave={this.props.onHoverLeave}
+                        onClick={this.onClick} />
+                    {this.renderTooltip()}
+                    {this.props.hoveredBus && (
                         <FeatureState
-                            id={this.props.hoveredBusFeature.properties.object_id}
+                            id={this.props.hoveredBus.id }
                             source='Point-data'
                             state={{
                                 hover: true,

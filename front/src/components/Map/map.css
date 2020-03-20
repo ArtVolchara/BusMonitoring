@@ -47,4 +47,14 @@
     margin-left: 20px;
     width: 160px;
   }
-  
+  .busPopup {
+      position: "absolute";
+      margin: "8px";
+      padding: "4px";
+      background-color: '#081217';
+      color: '#d3d6d9';
+      opacity: 0.9;
+      max-width: "300px";
+      border-radius: '5px';
+      z-index: 1;
+  }
