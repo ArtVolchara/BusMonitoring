@@ -1,6 +1,11 @@
 export const lineDataLayer = {
   id: 'Line-data',
   type: 'line',
+  source: 'Line-data',
+  layout: {
+    "line-join": "round",
+    "line-cap": "round",
+  },
   paint: {
     'line-color': {
       property: 'percentile',
@@ -10,5 +15,6 @@ export const lineDataLayer = {
       ],
     },
     'line-width': 3,
+    'line-opacity': 0.75,
   },
 };
