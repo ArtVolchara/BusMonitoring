@@ -1,7 +1,7 @@
 import React from 'react';
 import openSocket from 'socket.io-client';
-import Bus from './Bus/bus'
 import Map from '../Map/map';
+import Table from '../Table/table';
 import './homepage.css'
 
 const busesSocket = openSocket('http://localhost:8000/buses');
@@ -26,7 +26,7 @@ class Home extends React.Component {
       }
     }
     this.setState({ hoveredBusId })
-};
+  };
 
   onHoverLeave = () => {
     if (this.state.hoveredBusId) {
@@ -47,32 +47,23 @@ class Home extends React.Component {
       <div className='general_container'>
         {this.state.buses ?
           <>
-            <Map buses={this.state.buses} busesSocket={busesSocket}
-              handleClickedBus={this.handleClickedBus}
-              clickedBusId={this.state.clickedBusId}
-              hoveredBusId = {this.state.hoveredBusId}
-              onHover={this.onHover}
-              onHoverLeave={this.onHoverLeave}
-            />
-            <div className='table-container'>
-              <table className='bus-table'>
-                <thead>
-                  <tr>
-                    <th>Route</th>
-                    <th>Speed</th>
-                    <th>Fuel</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.buses && this.state.buses.map((bus, i) =>
-                    <Bus bus={bus} key={i} handleClickedBus={this.handleClickedBus}
-                      clickedBusId={this.state.clickedBusId}
-                      onHover={this.onHover}
-                      onHoverLeave={this.onHoverLeave}
-                      hoveredBusId={this.state.hoveredBusId} />
-                  )}
-                </tbody>
-              </table>
+            <div className="mapContainer">
+              <Map buses={this.state.buses} busesSocket={busesSocket}
+                handleClickedBus={this.handleClickedBus}
+                clickedBusId={this.state.clickedBusId}
+                hoveredBusId={this.state.hoveredBusId}
+                onHover={this.onHover}
+                onHoverLeave={this.onHoverLeave}
+              />
+              <div className='table-container'>
+                <Table
+                  buses={this.state.buses}
+                  handleClickedBus={this.handleClickedBus}
+                  clickedBusId={this.state.clickedBusId}
+                  onHover={this.onHover}
+                  onHoverLeave={this.onHoverLeave}
+                  hoveredBusId={this.state.hoveredBusId} />
+              </div>
             </div>
           </>
           : <></>

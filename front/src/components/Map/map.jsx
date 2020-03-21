@@ -84,7 +84,7 @@ export default class Map extends React.PureComponent {
     render() {
         console.log("map rendered");
         return (
-            <div className="mapContainer">
+            <>
                 <div className='sidebarStyle'>
                     <span>Longitude: {this.state.viewport.longitude}</span><span>Latitude: {this.state.viewport.latitude}</span><span>Zoom: {this.state.viewport.zoom}</span>
                 </div>
@@ -131,7 +131,7 @@ export default class Map extends React.PureComponent {
                         />
                     )}
                 </MapGL>
-            </div>
+            </>
         )
     }
 }

@@ -46,6 +46,8 @@
     margin-left: 20px;
     width: 160px;
   }
+
+/* this style is not applyied to the popup for some reason */
   .busPopup {
       position: "absolute";
       margin: "8px";

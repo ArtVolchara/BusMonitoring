@@ -11,8 +11,6 @@ export default class Bus extends React.PureComponent {
     }
     handleOnHover = () => {
         const hoveredBus = this.props.bus.object_id
-        console.log(hoveredBus);
-        
         this.props.onHover(null, hoveredBus);
     }
     render() {
