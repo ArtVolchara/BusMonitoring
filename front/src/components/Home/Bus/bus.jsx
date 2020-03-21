@@ -23,18 +23,19 @@ export default class Bus extends React.PureComponent {
         console.log("bus rendered");
         let { bus, hoveredBus, clickedBusId } = this.props
         return (
-            <tr style={clickedBusId && clickedBusId === this.props.bus.object_id?
+            <tr style={clickedBusId && clickedBusId === bus.object_id ?
                 selectionStyle
-                : hoveredBus && hoveredBus.id === this.props.bus.object_id ?
-                hoverStyle
-                : {}}
+                : hoveredBus && hoveredBus.id === bus.object_id ?
+                    hoverStyle
+                    : {}
+            }
                 onClick={this.onClick}
                 onMouseEnter={this.handleOnHover}
                 onMouseOut={this.props.onHoverLeave
                 }>
-                <td>{this.props.bus.route}</td>
-                <td>{this.props.bus.state.speed} km/h</td>
-                <td>{this.props.bus.state.fuel} litres</td>
+                <td>{bus.route}</td>
+                <td>{bus.state.speed} km/h</td>
+                <td>{bus.state.fuel} litres</td>
             </tr>
         )
     }

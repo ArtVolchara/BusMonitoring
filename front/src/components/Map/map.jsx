@@ -94,7 +94,8 @@ export default class Map extends React.PureComponent {
                     accessToken={MAPBOX_TOKEN}
                     cursorStyle={this.props.hoveredBus ?
                         'pointer'
-                        : null}
+                        : null
+                    }
                 >
                     {this.props.clickedBusId ?
                         <>
@@ -111,10 +112,19 @@ export default class Map extends React.PureComponent {
                     {this.renderTooltip()}
                     {this.props.hoveredBus && (
                         <FeatureState
-                            id={this.props.hoveredBus.id }
+                            id={this.props.hoveredBus.id}
                             source='Point-data'
                             state={{
                                 hover: true,
+                            }}
+                        />
+                    )}
+                    {this.props.clickedBusId && (
+                        <FeatureState
+                            id={this.props.clickedBusId}
+                            source='Point-data'
+                            state={{
+                                selected: true,
                             }}
                         />
                     )}
