@@ -36,18 +36,20 @@ export default class Map extends React.PureComponent {
         } = event;
         const clickedPoint = features && features.find(f => f.layer.id === 'Point-data');
         if (clickedPoint) {
-            let clickedBusId = clickedPoint.properties.object_id;
+            const clickedBusId = clickedPoint.properties.object_id;
             this.props.handleClickedBus(clickedBusId);
         }
     };
     renderTooltip() {
-        const { hoveredBus } = this.props;
+        const { hoveredBusId, buses } = this.props;
+        const hoveredBus = hoveredBusId && buses.find(bus => bus.object_id === hoveredBusId);
         return (
-            hoveredBus && (
-                <Popup longitude={hoveredBus.longitude}
-                    latitude={hoveredBus.latitude}
+            hoveredBusId && (
+                <Popup
+                    longitude={hoveredBus.state.position.coordinates[0]}
+                    latitude={hoveredBus.state.position.coordinates[1]}
                     closeButton={false} closeOnClick={false}
-                    className={'busPopup'}>
+                    className='busPopup'>
                     <div>Type: Bus</div>
                     <div>Registration number: {hoveredBus.reg_number}</div>
                     <div>Route: {hoveredBus.route}</div>
@@ -92,7 +94,7 @@ export default class Map extends React.PureComponent {
                     mapStyle="mapbox://styles/artvolchara/ck7ujql690k1a1ipaa5h7hr3o"
                     onViewportChange={this.onViewportChange}
                     accessToken={MAPBOX_TOKEN}
-                    cursorStyle={this.props.hoveredBus ?
+                    cursorStyle={this.props.hoveredBusId ?
                         'pointer'
                         : null
                     }
@@ -110,9 +112,9 @@ export default class Map extends React.PureComponent {
                         onLeave={this.props.onHoverLeave}
                         onClick={this.onClick} />
                     {this.renderTooltip()}
-                    {this.props.hoveredBus && (
+                    {this.props.hoveredBusId && (
                         <FeatureState
-                            id={this.props.hoveredBus.id}
+                            id={this.props.hoveredBusId}
                             source='Point-data'
                             state={{
                                 hover: true,
