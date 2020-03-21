@@ -7,14 +7,13 @@ export const lineDataLayer = {
     "line-cap": "round",
   },
   paint: {
-    'line-color': {
-      property: 'percentile',
-      stops: [
-        [0, "#1e90ff"],
-        [40, "#ff0000"],
-      ],
-    },
+    'line-color': [
+      'case',
+      ['boolean', [">=", ['get', 'percentile'], 40]],
+      "#ff0000",
+      "#1e90ff"
+    ],
     'line-width': 3,
-    'line-opacity': 0.75,
+    'line-opacity': 0.75
   },
 };

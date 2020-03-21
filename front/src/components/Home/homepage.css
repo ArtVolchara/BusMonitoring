@@ -23,95 +23,21 @@
     opacity: 0.9;
     border-radius:5px;
 }
-.bus-table {
-    margin: 0 0;
-    width: 100%;
-    color: #d3d6d9;
-    font-family: 'DIN Pro Medium';
-    font-size: 14px;
-    font-weight: bold;
-}
-.bus-table thead {
-    background-color: #081217;
-}
-.bus-table thead tr th {
-    padding: 6px;
-    text-align: center;
-}
-.bus-table tbody tr:hover {
-    cursor: pointer;
-    background-color: #556577
-}
-.bus-table tbody tr td {
-    text-align: center;
-}
 @media (max-width: 640px) {
     .table-container {
         left: 75%;
+        height:50%;
         width: 25%;
     }
-    .bus-table {
-        height: 100%;
-        width: 100%;
-    }
-    .bus-table thead {
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        height: 100%;
-        float: left;
-    }
-    .bus-table tbody {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: 100%;
-        width: auto;
-        position: relative;
-        overflow-x: auto;
-    }
-    .bus-table tr {
-        display: flex;
-        flex-direction: column;
-        width: max-content;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 5px;
-        height: 100%;
-    }
-
-    .bus-table thead tr {
-        padding: 4px; 
-    }
-
-    .bus-table thead tr th {
-        padding: 0px;
-    }
-    .bus-table td, .bus-table th {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        min-width: max-content;
-        width: auto;
-        height: 30%;
-        overflow-x: hidden;
-        overflow-y: auto;
-        text-overflow: ellipsis;
-    }
 }
-
 @media (max-width: 520px) {
     .mapContainer {
         font-size: 10px;
     }
     .table-container {
+        font-size: 10px;
         left: 75%;
         width: 25%;
-    }
-    .bus-table {
-        height: 100%;
-        width: 100%;
-
     }
 }
 @media (max-width: 320px, max-height: 480px) {
@@ -119,12 +45,10 @@
         font-size: 9px;
     }
     .table-container {
+        font-size: 9px;
         margin-top: 10px;
         margin-bottom: 10px;
         left: 72%;
         width: 28%;
-    }
-    .bus-table thead tr {
-        padding: 0 2px; 
     }
 }

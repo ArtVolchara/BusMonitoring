@@ -20,12 +20,17 @@ export const pointDataLayer = {
     },
     'circle-radius': 7,
     'circle-stroke-width': [
-      'case',
+      'case',['boolean', ['feature-state', 'selected'], false], 5,
       ['boolean', ['feature-state', 'hover'], false],
       5,
       0
     ],
-    'circle-stroke-color': '#556577'
+    'circle-stroke-color': [
+      'case',
+      ['boolean', ['feature-state', 'selected'], false], "#081217",
+      ['boolean', ['feature-state', 'hover'], false], '#556577',
+      'transparent'
+    ],
   },
 };
 
