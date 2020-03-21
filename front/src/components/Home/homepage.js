@@ -55,15 +55,16 @@ class Home extends React.Component {
                 onHover={this.onHover}
                 onHoverLeave={this.onHoverLeave}
               />
-              <div className='table-container'>
-                <Table
-                  buses={this.state.buses}
-                  handleClickedBus={this.handleClickedBus}
-                  clickedBusId={this.state.clickedBusId}
-                  onHover={this.onHover}
-                  onHoverLeave={this.onHoverLeave}
-                  hoveredBusId={this.state.hoveredBusId} />
-              </div>
+            </div>
+            <div className='table-container'>
+              <Table
+                buses={this.state.buses}
+                handleClickedBus={this.handleClickedBus}
+                clickedBusId={this.state.clickedBusId}
+                onHover={this.onHover}
+                onHoverLeave={this.onHoverLeave}
+                hoveredBusId={this.state.hoveredBusId}
+              />
             </div>
           </>
           : <></>
