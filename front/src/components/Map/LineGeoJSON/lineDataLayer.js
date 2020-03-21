@@ -9,18 +9,11 @@ export const lineDataLayer = {
   paint: {
     'line-color': [
       'case',
-      ['boolean',[">=", ['get', 'percentile'], 40]],
+      ['boolean', [">=", ['get', 'percentile'], 40]],
       "#ff0000",
       "#1e90ff"
     ],
+    'line-width': 3,
+    'line-opacity': 0.75
   },
 };
-// {
-//   property: 'percentile',
-//   stops: [
-//     [0, "#1e90ff"],
-//     [40, "#ff0000"],
-//   ],
-// },
-// 'line-width': 3,
-// 'line-opacity': 0.75

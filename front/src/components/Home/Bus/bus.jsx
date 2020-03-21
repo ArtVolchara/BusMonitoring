@@ -2,6 +2,9 @@ import React from 'react';
 const hoverStyle = {
     "backgroundColor": "#556577",
 }
+const selectionStyle = {
+    "backgroundColor": "#081217",
+}
 export default class Bus extends React.PureComponent {
     onClick = () => {
         this.props.handleClickedBus(this.props.bus.object_id);
@@ -18,9 +21,11 @@ export default class Bus extends React.PureComponent {
     }
     render() {
         console.log("bus rendered");
+        let { bus, hoveredBus, clickedBusId } = this.props
         return (
-            <tr style={this.props.hoveredBus &&
-                this.props.hoveredBus.object_id === this.props.bus.object_id ?
+            <tr style={clickedBusId && clickedBusId === this.props.bus.object_id?
+                selectionStyle
+                : hoveredBus && hoveredBus.id === this.props.bus.object_id ?
                 hoverStyle
                 : {}}
                 onClick={this.onClick}

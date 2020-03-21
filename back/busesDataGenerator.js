@@ -38,8 +38,6 @@ function busesDataGenerator() {
         console.log('connection  of /buses/telemetry destroyed');
       });
     });
-
-
     io.listen(port);
     console.log('busesDataGenerator listening on port ', port);
   } catch (error) {
