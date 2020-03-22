@@ -16,14 +16,16 @@ class Home extends React.Component {
     };
   }
   handleClickedBus = (clickedBusId) => {
-    this.setState({ clickedBusId: clickedBusId });
+    if (this.state.clickedBusId === clickedBusId) {
+      this.setState({ clickedBusId: null });
+    } else {
+      this.setState({ clickedBusId: clickedBusId });
+    }
   }
 
   onHover = (event, hoveredBusId) => {
     if (event) {
-      if (event.features.length > 0) {
-        hoveredBusId = event.features[0].properties.object_id
-      }
+      hoveredBusId = event.features && event.features.find(f => f.layer.id === 'Point-data').properties.object_id;
     }
     this.setState({ hoveredBusId })
   };

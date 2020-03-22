@@ -37,7 +37,8 @@
 @media (max-width: 520px) {
   .sidebarStyle {
     font-size: 10px;
-}}
+  }
+}
   label {
     display: inline-block;
     width: 100px;
@@ -46,8 +47,6 @@
     margin-left: 20px;
     width: 160px;
   }
-
-/* this style is not applyied to the popup for some reason */
   .busPopup {
       position: "absolute";
       margin: "8px";
